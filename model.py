@@ -53,11 +53,11 @@ class Problem:
 
         return results
 
-    def get_solution(self, algorithm='backtracking'):
+    def get_solution(self, algorithm='bt'):
         result = None
-        if algorithm == 'backtracking':
+        if algorithm == 'bt':
             result = self._get_solution_backtracking()
-        elif algorithm == 'forward_checking':
+        elif algorithm == 'fc':
             result = self._get_solution_forward_checking()
 
         return result
@@ -75,29 +75,8 @@ class Problem:
 
         return solutions
 
-    # def getSolutionBacktracking(self):
-    #     domain_indices = [0 for v in self.variables]
-    #
-    #     solution = dict([(variable[0], variable[1][domain_indices[index]]) for index, variable in enumerate(self.variables)])
-    #     last_increased_index = 0;
-    #     print(solution)
-    #
-    #     while min(self.checkConstraints(solution)) is not True and last_increased_index >= 0:
-    #         last_increased_index = self.changeValuesBacktracking(last_increased_index, domain_indices)
-    #         solution = dict([(variable[0], variable[1][domain_indices[index]]) for index, variable in enumerate(self.variables)])
-    #         print(solution)
-    #
-    #     return solution
-    #
     def _get_solution_forward_checking(self):
         return []
-    #
-    # def changeValuesBacktracking(self, last_increased_index, current_indices):
-    #     domain_lenghts = [len(variable[1]) for variable in self.variables]
-    #
-    #
-    #
-    #     return last_increased_index
 
     def _get_solution_backtracking(self):
         assigned_variables = []
@@ -106,17 +85,14 @@ class Problem:
         assigned_variables.append(self.variables[0])
         last_assigned_variable = 0
 
-
-
         return []
 
     def _get_constraints_with_variables(self, variables):
         verified_constraints = set()
-        # TODO change to frozenset
         vars_set = frozenset(variables)
         for c in self.constraints:
             # if c.v is a subset of given variables
-            if set(c.v) <= vars_set:
+            if frozenset(c.v) <= vars_set:
                 verified_constraints.add(c)
         return verified_constraints
 
