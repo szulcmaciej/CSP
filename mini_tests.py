@@ -27,6 +27,11 @@ p.create_and_add_variable('c', [1, 2, 3, 4, 5])
 p.create_and_add_variable('d', [1, 2, 3, 4, 5])
 p.create_and_add_variable('e', [1, 2, 3, 4, 5])
 
+# p.create_and_add_constraint(lambda x, y: x == y, ['a', 'b'])
+# p.create_and_add_constraint(lambda x, y: x == y, ['b', 'c'])
+# p.create_and_add_constraint(lambda x, y: x == y, ['c', 'd'])
+# p.create_and_add_constraint(lambda x, y: x == y, ['d', 'e'])
+
 p.create_and_add_constraint(lambda x, y: x == y, ['a', 'b'])
 p.create_and_add_constraint(lambda x, y: x > y, ['b', 'c'])
 p.create_and_add_constraint(lambda x, y: x < y, ['d', 'e'])
@@ -47,10 +52,17 @@ p.create_and_add_constraint(lambda x, y: x > y, ['a', 'c'])
 
 
 
-solutions = p.get_all_solutions()
+solutions = p.get_all_solutions('bt')
+solutions2 = p.get_all_solutions('fc')
 # print(solutions)
 
 for s in solutions:
+    for v in s:
+        print(v, s[v], end='  ')
+    print()
+
+print()
+for s in solutions2:
     for v in s:
         print(v, s[v], end='  ')
     print()

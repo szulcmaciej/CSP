@@ -3,7 +3,7 @@ import numpy as np
 import cProfile
 
 
-QUEEN_NUMBER = 8
+QUEEN_NUMBER = 10
 
 # domain represents the row number
 domains = []
@@ -32,33 +32,35 @@ for v in variables:
 for c in constraints:
     p.add_constraint(c)
 
-# cProfile.run('p.get_all_solutions()', sort='tottime')
+cProfile.run('p.get_all_solutions(\'bt\')', sort='tottime')
+cProfile.run('p.get_all_solutions(\'fc\')', sort='tottime')
 
 
-# print(p.variables)
-# print(domains)
-# print(p.constraints)
-
-print('Variables: ' + str(len(variables)))
-print('Constraints: ' + str(len(constraints)))
-
-solutions = p.get_all_solutions()
-
-
-
-print()
-print('Solutions:' + str(len(solutions)))
-# for s in solutions:
-#     print(s)
-
-solution = solutions[0]
-
-board = np.zeros(shape=(QUEEN_NUMBER, QUEEN_NUMBER))
-# for i in range(QUEEN_NUMBER):
-#     for j in range(QUEEN_NUMBER):
-
-values = [solution[k] for k in solution]
-print(values)
-for v in values:
-    board[v[0], v[1]] = 1
-print(board)
+# # print(p.variables)
+# # print(domains)
+# # print(p.constraints)
+#
+# print('Variables: ' + str(len(variables)))
+# print('Constraints: ' + str(len(constraints)))
+#
+# # solutions = p.get_all_solutions('bt')
+# # solutions = p.get_all_solutions('fc')
+#
+#
+#
+# print()
+# print('Solutions:' + str(len(solutions)))
+# # for s in solutions:
+# #     print(s)
+#
+# solution = solutions[0]
+#
+# board = np.zeros(shape=(QUEEN_NUMBER, QUEEN_NUMBER))
+# # for i in range(QUEEN_NUMBER):
+# #     for j in range(QUEEN_NUMBER):
+#
+# values = [solution[k] for k in solution]
+# print(values)
+# for v in values:
+#     board[v[0], v[1]] = 1
+# print(board)

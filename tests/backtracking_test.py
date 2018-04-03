@@ -31,7 +31,8 @@ print(p.constraints)
 print()
 print()
 
-cProfile.run('p.get_all_solutions()', sort='tottime')
+cProfile.run('p.get_all_solutions(\'bt\')', sort='tottime')
+cProfile.run('p.get_all_solutions(\'fc\')', sort='tottime')
 # solutions = p.get_all_solutions()
 
 # print('Solutions:')

@@ -58,15 +58,16 @@ class Problem:
 
         return result
 
-    def get_all_solutions(self, algorithm='backtracking'):
+    def get_all_solutions(self, algorithm='bt'):
         solutions = []
 
-        if algorithm == 'backtracking':
+        if algorithm == 'bt':
             solution = {}
             solutions = self._backtrack_all_solutions(solution)
-        elif algorithm == 'forward_checking':
-            # TODO
-            solutions = []
+        elif algorithm == 'fc':
+            solution = {}
+            domains = [v.d for v in self.variables]
+            solutions = self._forward_check_all_solutions(solution, domains)
 
         return solutions
 
@@ -135,7 +136,7 @@ class Problem:
             if set(current_variables) == set(self.variables):
                 valid_solutions.append(current_solution)
             else:
-                # v - currently asigned variabled
+                # v - variable being assigned
                 v = self.variables[last_assigned_var_index + 1]
                 for value in v.d:
                     solution = current_solution.copy()
@@ -144,31 +145,47 @@ class Problem:
 
         return valid_solutions
 
-    def _forward_check_all_solutions(self, current_solution):
+    def _forward_check_all_solutions(self, current_solution, current_domains):
         valid_solutions = []
         last_assigned_var_index = -1
         current_variables = []
-        current_constraints = []
 
         # if solution dict is not empty
         if bool(current_solution):
             last_assigned_var_index = len(current_solution) - 1
             current_variables = set(current_solution)
-            current_constraints = self._get_constraints_with_variables(current_variables)
+        else:
+            current_domains = [v.d.copy() for v in self.variables]
 
-        # check current solution, if valid add to valid_solutions[] or go deeper (to next variable)
+        # (don't) check current solution, if valid add to valid_solutions[] or go deeper (to next variable)
 
-        # check if all constraints in current solution are met
-        if not current_solution or not current_constraints or min(self.check_constraints(current_constraints, current_solution)) is True:
-            # if all variables are assigned, save solution, otherwise go deeper
-            if set(current_variables) == set(self.variables):
-                valid_solutions.append(current_solution)
-            else:
-                # v - currently asigned variabled
+        # update domains for remaining variables for current solution, if any domain is empty return nothing
+
+        # if all variables are assigned, save solution, otherwise go deeper
+        if set(current_variables) == set(self.variables):
+            valid_solutions.append(current_solution)
+        else:
+            # check domains for remaining variables
+            for i in range(last_assigned_var_index + 1, len(self.variables)):
+                # check every value in remaining domains
+                var_domain = current_domains[i].copy()
+                for v in var_domain:
+                    solution = current_solution.copy()
+                    solution[self.variables[i]] = v
+                    constraints = self._get_constraints_with_variables(set(solution))
+                    # if constraints aren't met, remove current value from current_domains
+                    if constraints and min(self.check_constraints(constraints, solution)) is not True:
+                        current_domains[i].remove(v)
+
+            # check if any of remaining domains is empty
+            if min(list(map(len, current_domains))) > 0:
+                # v - variable being assigned
                 v = self.variables[last_assigned_var_index + 1]
-                for value in v.d:
+                v_domain = current_domains[last_assigned_var_index + 1]
+                for value in v_domain:
                     solution = current_solution.copy()
                     solution[v] = value
-                    valid_solutions = valid_solutions + self._backtrack_all_solutions(solution)
+                    current_domains_copy = [d.copy() for d in current_domains]
+                    valid_solutions = valid_solutions + self._forward_check_all_solutions(solution, current_domains_copy)
 
         return valid_solutions
