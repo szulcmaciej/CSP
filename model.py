@@ -6,6 +6,9 @@ class Variable:
     def __repr__(self):
         return str(self.n)
 
+    # def __str__(self):
+    #     return str(self.n) + str(self.d)
+
 
 class Constraint:
     def __init__(self, con_fun, variables):
@@ -40,7 +43,8 @@ class Problem:
     def add_constraint(self, c):
         self.constraints.add(c)
 
-    def check_constraints(self, constraints, solution_dict):
+    @staticmethod
+    def check_constraints(constraints, solution_dict):
         results = []
         # solution_variables = solution_dict.keys
         for c in constraints:
@@ -131,7 +135,7 @@ class Problem:
         # check current solution, if valid add to valid_solutions[] or go deeper (to next variable)
 
         # check if all constraints in current solution are met
-        if not current_solution or not current_constraints or min(self.check_constraints(current_constraints, current_solution)) is True:
+        if not current_solution or all(self.check_constraints(current_constraints, current_solution)):
             # if all variables are assigned, save solution, otherwise go deeper
             if set(current_variables) == set(self.variables):
                 valid_solutions.append(current_solution)
@@ -174,7 +178,7 @@ class Problem:
                     solution[self.variables[i]] = v
                     constraints = self._get_constraints_with_variables(set(solution))
                     # if constraints aren't met, remove current value from current_domains
-                    if constraints and min(self.check_constraints(constraints, solution)) is not True:
+                    if constraints and not all(self.check_constraints(constraints, solution)):
                         current_domains[i].remove(v)
 
             # check if any of remaining domains is empty
