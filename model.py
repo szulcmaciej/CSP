@@ -3,7 +3,7 @@ class Variable:
         self.n = name
         self.d = domain
 
-    def __str__(self):
+    def __repr__(self):
         return str(self.n)
 
 
@@ -13,23 +13,32 @@ class Constraint:
         # set
         self.v = variables
 
+    def __repr__(self):
+        return str(self.v)
+
 
 class Problem:
     def __init__(self):
         self.variables = []
         # set
-        self.constraints = []
+        self.constraints = set()
 
-    def add_variable(self, name, domain):
+    def create_and_add_variable(self, name, domain):
         self.variables.append(Variable(name, domain))
 
-    def add_constraint(self, constraint_fun, variables):
+    def add_variable(self, v):
+        self.variables.append(v)
+
+    def create_and_add_constraint(self, constraint_fun, variables):
         object_variables = []
         for v in variables:
             for obj_v in self.variables:
                 if obj_v.n == v:
                     object_variables.append(obj_v)
-        self.constraints.append(Constraint(constraint_fun, object_variables))
+        self.constraints.add(Constraint(constraint_fun, object_variables))
+
+    def add_constraint(self, c):
+        self.constraints.add(c)
 
     def check_constraints(self, constraints, solution_dict):
         results = []
@@ -99,7 +108,7 @@ class Problem:
     def _get_constraints_with_variables(self, variables):
         verified_constraints = set()
         # TODO change to frozenset
-        vars_set = variables
+        vars_set = frozenset(variables)
         for c in self.constraints:
             # if c.v is a subset of given variables
             if set(c.v) <= vars_set:
@@ -135,3 +144,31 @@ class Problem:
 
         return valid_solutions
 
+    def _forward_check_all_solutions(self, current_solution):
+        valid_solutions = []
+        last_assigned_var_index = -1
+        current_variables = []
+        current_constraints = []
+
+        # if solution dict is not empty
+        if bool(current_solution):
+            last_assigned_var_index = len(current_solution) - 1
+            current_variables = set(current_solution)
+            current_constraints = self._get_constraints_with_variables(current_variables)
+
+        # check current solution, if valid add to valid_solutions[] or go deeper (to next variable)
+
+        # check if all constraints in current solution are met
+        if not current_solution or not current_constraints or min(self.check_constraints(current_constraints, current_solution)) is True:
+            # if all variables are assigned, save solution, otherwise go deeper
+            if set(current_variables) == set(self.variables):
+                valid_solutions.append(current_solution)
+            else:
+                # v - currently asigned variabled
+                v = self.variables[last_assigned_var_index + 1]
+                for value in v.d:
+                    solution = current_solution.copy()
+                    solution[v] = value
+                    valid_solutions = valid_solutions + self._backtrack_all_solutions(solution)
+
+        return valid_solutions
