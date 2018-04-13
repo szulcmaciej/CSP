@@ -3,7 +3,7 @@ import numpy as np
 import cProfile
 
 
-QUEEN_NUMBER = 10
+QUEEN_NUMBER = 9
 
 # domain represents the row number
 domains = []
@@ -32,35 +32,65 @@ for v in variables:
 for c in constraints:
     p.add_constraint(c)
 
-cProfile.run('p.get_all_solutions(\'bt\')', sort='tottime')
-cProfile.run('p.get_all_solutions(\'fc\')', sort='tottime')
+# cProfile.run('p.get_all_solutions(\'bt\')', sort='tottime')
+# cProfile.run('p.get_all_solutions(\'fc\')', sort='tottime')
 
 
-# # print(p.variables)
-# # print(domains)
-# # print(p.constraints)
-#
-# print('Variables: ' + str(len(variables)))
-# print('Constraints: ' + str(len(constraints)))
-#
-# # solutions = p.get_all_solutions('bt')
-# # solutions = p.get_all_solutions('fc')
-#
-#
-#
-# print()
-# print('Solutions:' + str(len(solutions)))
-# # for s in solutions:
-# #     print(s)
-#
-# solution = solutions[0]
-#
+# print(p.variables)
+# print(domains)
+# print(p.constraints)
+
+print('Variables: ' + str(len(variables)))
+print('Constraints: ' + str(len(constraints)))
+
+solutions_bt, returns_number_bt, nodes_number_bt = p.get_all_solutions('bt')
+solutions_fc, returns_number_fc, nodes_number_fc = p.get_all_solutions('fc')
+
+
+# BT
+print()
+print('Backtracking')
+print('Solutions:' + str(len(solutions_bt)))
+# for s in solutions:
+#     print(s)
+
+solution_bt = solutions_bt[0]
+
 # board = np.zeros(shape=(QUEEN_NUMBER, QUEEN_NUMBER))
-# # for i in range(QUEEN_NUMBER):
-# #     for j in range(QUEEN_NUMBER):
 #
+#
+# # # print first solution
+# # values = [solution[k] for k in solution]
+# # print(values)
+# # for v in values:
+# #     board[v[0], v[1]] = 1
+# # print(board)
+
+
+print('Nodes: ' + str(nodes_number_bt))
+print('Returns: ' + str(returns_number_bt))
+
+
+
+# FC
+print()
+print('Forward-checking')
+print('Solutions:' + str(len(solutions_fc)))
+# for s in solutions:
+#     print(s)
+
+solution = solutions_fc[0]
+
+board = np.zeros(shape=(QUEEN_NUMBER, QUEEN_NUMBER))
+
+
+# # print first solution
 # values = [solution[k] for k in solution]
 # print(values)
 # for v in values:
 #     board[v[0], v[1]] = 1
 # print(board)
+
+
+print('Nodes: ' + str(nodes_number_fc))
+print('Returns: ' + str(returns_number_fc))

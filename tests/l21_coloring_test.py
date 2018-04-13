@@ -3,7 +3,7 @@ import cProfile
 import numpy as np
 import time
 
-SQUARE_SIZE = 6
+SQUARE_SIZE = 4
 NUMBER_OF_COLORS = 5
 
 domains = []
@@ -79,12 +79,9 @@ for v in variables:
 for c in constraints:
     p.add_constraint(c)
 
-start_time = time.time()
-solutions = p.get_all_solutions('bt')
-elapsed_time = time.time() - start_time
-
-# cProfile.run('p.get_all_solutions(\'bt\')', sort='tottime')
-# cProfile.run('p.get_all_solutions(\'fc\')', sort='tottime')
+# start_time = time.time()
+# solutions = p.get_all_solutions('bt')
+# elapsed_time = time.time() - start_time
 
 
 def solution_print(solution):
@@ -97,10 +94,39 @@ def solution_print(solution):
     print(board)
 
 
-for s in solutions:
-    solution_print(s)
-    print()
+# for s in solutions:
+#     solution_print(s)
+#     print()
 
 
-print('Solutions: ' + str(len(solutions)))
-print('Time: ' + str(elapsed_time))
+# print('Solutions: ' + str(len(solutions)))
+# print('Time: ' + str(elapsed_time))
+
+
+
+# cProfile.run('p.get_all_solutions(\'bt\')', sort='tottime')
+# cProfile.run('p.get_all_solutions(\'fc\')', sort='tottime')
+
+solutions_bt, returns_number_bt, nodes_number_bt = p.get_all_solutions('bt')
+solutions_fc, returns_number_fc, nodes_number_fc = p.get_all_solutions('fc')
+
+
+# BT
+print()
+print('Backtracking')
+print('Solutions:' + str(len(solutions_bt)))
+
+solution_bt = solutions_bt[0]
+
+print('Nodes: ' + str(nodes_number_bt))
+print('Returns: ' + str(returns_number_bt))
+
+# FC
+print()
+print('Forward-checking')
+print('Solutions:' + str(len(solutions_fc)))
+
+solution = solutions_fc[0]
+
+print('Nodes: ' + str(nodes_number_fc))
+print('Returns: ' + str(returns_number_fc))

@@ -54,18 +54,19 @@ p.create_and_add_constraint(lambda x, y: x > y, ['a', 'c'])
 
 solutions = p.get_all_solutions('bt')
 solutions2 = p.get_all_solutions('fc')
-# print(solutions)
+print(solutions)
+print(solutions2)
 
-for s in solutions:
-    for v in s:
-        print(v, s[v], end='  ')
-    print()
-
-print()
-for s in solutions2:
-    for v in s:
-        print(v, s[v], end='  ')
-    print()
+# for s in solutions:
+#     for v in s[0]:
+#         print(v, s[0][v], end='  ')
+#     print()
+#
+# print()
+# for s in solutions2:
+#     for v in s[0]:
+#         print(v, s[0][v], end='  ')
+#     print()
 
 
 
