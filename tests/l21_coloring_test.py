@@ -69,6 +69,7 @@ for i, r in enumerate(rows):
         for other in get_diagonal_neighbours(coords):
             constraints.append(Constraint(lambda x, y: abs(x - y) > 0, [v, other]))
 
+print("Variables: ", len(variables))
 print('Constraints: ', len(constraints))
 
 p = Problem()
@@ -107,16 +108,18 @@ def solution_print(solution):
 # cProfile.run('p.get_all_solutions(\'bt\')', sort='tottime')
 # cProfile.run('p.get_all_solutions(\'fc\')', sort='tottime')
 
-solutions_bt, returns_number_bt, nodes_number_bt = p.get_all_solutions('bt')
-solutions_fc, returns_number_fc, nodes_number_fc = p.get_all_solutions('fc')
 
 
 # BT
 print()
 print('Backtracking')
+bt_time = time.time()
+solutions_bt, returns_number_bt, nodes_number_bt = p.get_all_solutions('bt', 'd', 'd')
+bt_time = time.time() - bt_time
 print('Solutions:' + str(len(solutions_bt)))
+print('Time: ' + str(round(bt_time, 4)) + ' s')
 
-solution_bt = solutions_bt[0]
+# solution_bt = solutions_bt[0]
 
 print('Nodes: ' + str(nodes_number_bt))
 print('Returns: ' + str(returns_number_bt))
@@ -124,9 +127,13 @@ print('Returns: ' + str(returns_number_bt))
 # FC
 print()
 print('Forward-checking')
+fc_time = time.time()
+solutions_fc, returns_number_fc, nodes_number_fc = p.get_all_solutions('fc', 'd', 'r')
+fc_time = time.time() - fc_time
 print('Solutions:' + str(len(solutions_fc)))
+print('Time: ' + str(round(fc_time, 4)) + ' s')
 
-solution = solutions_fc[0]
+# solution = solutions_fc[0]
 
 print('Nodes: ' + str(nodes_number_fc))
 print('Returns: ' + str(returns_number_fc))

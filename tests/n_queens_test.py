@@ -1,9 +1,10 @@
 from model import Problem, Variable, Constraint
 import numpy as np
 import cProfile
+import time
 
 
-QUEEN_NUMBER = 9
+QUEEN_NUMBER = 11
 
 # domain represents the row number
 domains = []
@@ -32,9 +33,6 @@ for v in variables:
 for c in constraints:
     p.add_constraint(c)
 
-# cProfile.run('p.get_all_solutions(\'bt\')', sort='tottime')
-# cProfile.run('p.get_all_solutions(\'fc\')', sort='tottime')
-
 
 # print(p.variables)
 # print(domains)
@@ -43,14 +41,19 @@ for c in constraints:
 print('Variables: ' + str(len(variables)))
 print('Constraints: ' + str(len(constraints)))
 
-solutions_bt, returns_number_bt, nodes_number_bt = p.get_all_solutions('bt')
-solutions_fc, returns_number_fc, nodes_number_fc = p.get_all_solutions('fc')
+# cProfile.run('p.get_all_solutions(\'bt\')', sort='tottime')
+# cProfile.run('p.get_all_solutions(\'fc\')', sort='tottime')
+
 
 
 # BT
 print()
 print('Backtracking')
+bt_time = time.time()
+solutions_bt, returns_number_bt, nodes_number_bt = p.get_all_solutions('bt')
+bt_time = time.time() - bt_time
 print('Solutions:' + str(len(solutions_bt)))
+print('Time: ' + str(round(bt_time, 4)) + ' s')
 # for s in solutions:
 #     print(s)
 
@@ -75,7 +78,11 @@ print('Returns: ' + str(returns_number_bt))
 # FC
 print()
 print('Forward-checking')
+fc_time = time.time()
+solutions_fc, returns_number_fc, nodes_number_fc = p.get_all_solutions('fc')
+fc_time = time.time() - fc_time
 print('Solutions:' + str(len(solutions_fc)))
+print('Time: ' + str(round(fc_time, 4)) + ' s')
 # for s in solutions:
 #     print(s)
 

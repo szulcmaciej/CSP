@@ -1,4 +1,5 @@
 import utils
+from random import shuffle
 
 class Variable:
     def __init__(self, name, domain):
@@ -73,15 +74,19 @@ class Problem:
 
         return result
 
-    def get_all_solutions(self, algorithm='bt'):
+    def get_all_solutions(self, algorithm='bt', var_order='d', val_order='d'):
         solutions = []
         returns_number = 0
         nodes_number = 0
 
-        constraint_levels = self._create_constraint_levels()
+        self._sort_variables(var_order)
+        self._sort_values(val_order)
+
+        # constraint_levels = self._create_constraint_levels()
+        constraint_levels = []
 
         self._init_constraint_dict()
-        print('constraint_dict initialized')
+        # print('constraint_dict initialized')
 
         if algorithm == 'bt':
             solution = {}
@@ -114,6 +119,38 @@ class Problem:
                 verified_constraints.add(c)
         return verified_constraints
 
+    def _sort_variables(self, order='d'):
+        # random
+        if order == 'r':
+            shuffle(self.variables)
+        elif order == 'mcf':
+            self._sort_variables_with_most_constraints_first()
+        elif order == 'lcf':
+            self._sort_variables_with_least_constraints_first()
+
+    def _sort_values(self, val_order='d'):
+        # random
+        if val_order == 'r':
+            for v in self.variables:
+                shuffle(v.d)
+
+    def _sort_variables_with_most_constraints_first(self):
+        vars_with_constraint_number = [(self._constraint_number_of_variable(v), v) for v in self.variables]
+        vars_sorted = sorted(vars_with_constraint_number, key=lambda tup: tup[0], reverse=True)
+        self.variables = [vs[1] for vs in vars_sorted]
+
+    def _sort_variables_with_least_constraints_first(self):
+        vars_with_constraint_number = [(self._constraint_number_of_variable(v), v) for v in self.variables]
+        vars_sorted = sorted(vars_with_constraint_number, key=lambda tup: tup[0], reverse=False)
+        self.variables = [vs[1] for vs in vars_sorted]
+
+    def _constraint_number_of_variable(self, v):
+        constraint_number = 0
+        for c in self.constraints:
+            if v in c.v:
+                constraint_number += 1
+        return constraint_number
+
     def _create_constraint_levels(self):
         constraint_levels = []
         for i in range(self.variables.__len__()):
@@ -133,6 +170,7 @@ class Problem:
         last_assigned_var_index = -1
         current_variables = []
         current_constraints = []
+
 
         # if solution dict is not empty
         if bool(current_solution):

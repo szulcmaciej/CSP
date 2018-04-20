@@ -1,5 +1,6 @@
 from model import Problem, Constraint, Variable
 import cProfile
+import time
 
 SQUARE_SIZE = 4
 
@@ -52,6 +53,7 @@ for c in columns:
 #     constraint = Constraint(different4, c)
 #     constraints.append(constraint)
 
+print("Variables: ", len(variables))
 print('Constraints: ', len(constraints))
 
 p = Problem()
@@ -63,31 +65,39 @@ for c in constraints:
     p.add_constraint(c)
 
 
-# cProfile.run('p.get_all_solutions(\'bt\')', sort='tottime')
-# cProfile.run('p.get_all_solutions(\'fc\')', sort='tottime')
+cProfile.run('p.get_all_solutions(\'bt\')', sort='tottime')
+cProfile.run('p.get_all_solutions(\'fc\')', sort='tottime')
 
 
 
-solutions_bt, returns_number_bt, nodes_number_bt = p.get_all_solutions('bt')
-solutions_fc, returns_number_fc, nodes_number_fc = p.get_all_solutions('fc')
 
 
-# BT
-print()
-print('Backtracking')
-print('Solutions:' + str(len(solutions_bt)))
-
-solution_bt = solutions_bt[0]
-
-print('Nodes: ' + str(nodes_number_bt))
-print('Returns: ' + str(returns_number_bt))
-
-# FC
-print()
-print('Forward-checking')
-print('Solutions:' + str(len(solutions_fc)))
-
-solution = solutions_fc[0]
-
-print('Nodes: ' + str(nodes_number_fc))
-print('Returns: ' + str(returns_number_fc))
+# # BT
+# print()
+# print('Backtracking')
+# bt_time = time.time()
+# solutions_bt, returns_number_bt, nodes_number_bt = p.get_all_solutions('bt')
+# bt_time = time.time() - bt_time
+# print('Solutions:' + str(len(solutions_bt)))
+# # print('Time: ' + str(round(bt_time, 4)) + ' s')
+# print('Time: ' + str(bt_time) + ' s')
+#
+# solution_bt = solutions_bt[0]
+#
+# print('Nodes: ' + str(nodes_number_bt))
+# print('Returns: ' + str(returns_number_bt))
+#
+# # FC
+# print()
+# print('Forward-checking')
+# fc_time = time.time()
+# solutions_fc, returns_number_fc, nodes_number_fc = p.get_all_solutions('fc')
+# fc_time = time.time() - fc_time
+# print('Solutions:' + str(len(solutions_fc)))
+# # print('Time: ' + str(round(fc_time, 4)) + ' s')
+# print('Time: ' + str(fc_time) + ' s')
+#
+# solution = solutions_fc[0]
+#
+# print('Nodes: ' + str(nodes_number_fc))
+# print('Returns: ' + str(returns_number_fc))
